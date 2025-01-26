@@ -2,7 +2,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 # Example model for a Case
 class Case(models.Model):
     CASE_TYPES = [
