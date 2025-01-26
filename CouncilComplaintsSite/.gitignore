@@ -1,2 +1,5 @@
 /Scripts
 .Scripts
+venv/
+.venv
+/.venv
