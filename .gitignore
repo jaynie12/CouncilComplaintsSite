@@ -1,4 +1,5 @@
 CouncilComplaintsSite/pyvenv.cfg
 /Scripts
 Lib
+main
 /.venv
