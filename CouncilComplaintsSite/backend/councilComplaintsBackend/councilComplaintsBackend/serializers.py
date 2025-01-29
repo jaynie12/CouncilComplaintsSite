@@ -1,0 +1,16 @@
+#Here is the serializer for model React. Serializers are basically used to convert complex data to native Python datatypes that can then be easily rendered into JSON
+
+from rest_framework import serializers
+from .models import Case
+from django.contrib.auth.models import User
+
+
+class CaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Case
+        fields = ['case_type', 'status', 'case_short_description','case_long_description','created_at', 'user_raised', 'staff_assigned', 'case_image']
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'is_staff', 'first_name' , 'last_name']
