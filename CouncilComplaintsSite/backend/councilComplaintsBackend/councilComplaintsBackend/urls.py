@@ -19,13 +19,13 @@ from django.urls import path, include
 from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 from .views import *
+import views
 
 router = DefaultRouter()
 
-router.register(r'cases', CaseViewSet)
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
-    path()
+urlpatterns = [ 
+    url(r'^api/cases$', views.cases_list),
+    url(r'^api/tutorials/(?P<id>[0-9]+)$', views.case_details),
+    url(r'^api/tutorials/published$', views.case_by_user)
 ]
