@@ -27,4 +27,5 @@ router.register(r'cases', CaseViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls))
+    path()
 ]
