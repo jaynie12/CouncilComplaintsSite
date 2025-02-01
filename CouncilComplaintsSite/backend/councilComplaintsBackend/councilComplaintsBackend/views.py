@@ -4,9 +4,12 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from rest_framework.response import Response
+import choices
 
 from .models import *
 from .serializers import *
+
+#https://www.bezkoder.com/django-crud-mysql-rest-framework/
 
 @api_view(['GET', 'POST'])
 def cases_list(request):
@@ -23,12 +26,14 @@ def cases_list(request):
         # 'safe=False' for objects serialization
 
     elif request.method == 'POST':
-        case_data = JSONParser().parse(request)
-        case_serializer = CaseSerializer(data=case_data)
+        case_serializer = CaseCreateSerializer(data=request.data)
+        
+        # Validate and save the data
         if case_serializer.is_valid():
             case_serializer.save()
-            return JsonResponse(case_serializer.data, status=status.HTTP_201_CREATED) 
-        return JsonResponse(case_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(case_serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(case_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
  
 @api_view(['GET', 'PUT'])
@@ -74,3 +79,20 @@ def case_by_user(request, username):
     if request.method == 'GET': 
         case_serializer = CaseSerializer(cases, many=True)
         return JsonResponse(case_serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_case_types(request):
+    """Get all case types
+
+    Args:
+        request (request):The incoming API request object.
+
+    Returns:
+        Response: Objet with the JSON data with a list of case types
+    """
+    my_choices = []
+    choice_dict = dict(choices.CASE_TYPES)
+    for key, value in choice_dict.items():
+        itered_dict = {"key": key, "value": value}
+        my_choices.append(itered_dict)
+    return Response(my_choices, status=status.HTTP_200_OK)

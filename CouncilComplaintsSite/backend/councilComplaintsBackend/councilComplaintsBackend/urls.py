@@ -16,16 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 from .views import *
-import views
-
+from . import views
 router = DefaultRouter()
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [ 
-    url(r'^api/cases$', views.cases_list),
-    url(r'^api/tutorials/(?P<id>[0-9]+)$', views.case_details),
-    url(r'^api/tutorials/published$', views.case_by_user)
+    path('api/cases', views.cases_list, name='cases_list'),
+    path('api/cases/id', views.case_details, name='case_details'),
+    path('api/cases/username', views.case_by_user, name='case_by_user'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

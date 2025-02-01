@@ -8,7 +8,12 @@ from django.contrib.auth.models import User
 class CaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Case
-        fields = ['case_type', 'status', 'case_short_description','case_long_description','created_at', 'user_raised', 'staff_assigned', 'case_image']
+        fields = ['case_type', 'status', 'case_short_description','created_at', 'user_raised', 'staff_assigned', 'case_image']
+
+class CaseCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Case
+        fields = ['case_type', 'case_short_description', 'case_image']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
