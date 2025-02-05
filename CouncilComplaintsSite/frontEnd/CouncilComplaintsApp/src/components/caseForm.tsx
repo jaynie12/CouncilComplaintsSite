@@ -1,91 +1,137 @@
-import axios  from 'axios';
-// Filename - App.js
-// It contains the Form, its Structure
-// and Basic Form Functionalities
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-import "./caseForm.css";
-import React, { useState } from "react";
+const CaseForm = () => {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-function CaseForm() {
-    const [case_short_description, setShortDescription] = useState("");
-    const [case_type, setCaseType] = useState("");
-    const [image, setImage] = useState("");
+  // Case type options
+  const caseTypes = ["Potholes", "Street lighting", "Graffiti", "Anti-Social behavior", "Other"];
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(
-          case_short_description,
-          case_type,
-          image
-        );
-        // Add your form submission logic here
-    };
+  // Form Validation Schema
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    phone: Yup.string()
+      .matches(/^\d{10}$/, "Phone number must be 10 digits")
+      .required("Phone number is required"),
+    caseType: Yup.string().required("Case type is required"),
+    caseDescription: Yup.string().required("Description is required"),
+    caseImage: Yup.mixed()
+      .required("Image is required")
+      .test("fileSize", "File too large", (value: any) => {
+        return value && value.size <= 2000000; // 2MB max size
+      }),
+  });
 
-    const handleSubjectChange = (sub) => {
-        setSubjects((prev) => ({
-            ...prev,
-            [sub]: !prev[sub],
-        }));
-    };
-    const handleReset = () => {
-        // Reset all state variables here
-        setShortDescription("");
-        setCaseType({
-            english: true,
-            maths: false,
-            physics: false,
-        });
-        setImage("");
-    };
+  // Handle Form Submission
+  const handleSubmit = async (values: any, { resetForm }: any) => {
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("email", values.email);
+    formData.append("phone", values.phone);
+    formData.append("case_type", values.caseType);
+    formData.append("case_description", values.caseDescription);
+    formData.append("case_image", values.caseImage);
 
-    return (
-        <div className="App">
-            <h1>Form in React</h1>
-            <fieldset>
-                <form action="#" method="get">
-                    <label for="case_short_description">
-                        Case Description*
-                    </label>
-                    <input
-                        type="text"
-                        name="case_short_description"
-                        id="case_short_description"
-                        value={case_short_description}
-                        onChange={(e) =>
-                          setShortDescription(e.target.value)
-                        }
-                        placeholder="Enter details about the issue"
-                        required
-                    />
-                    <label htmlFor="file">Upload Image*</label>
-                    <input
-                        type="file"
-                        name="file"
-                        id="file"
-                        onChange={(e) =>
-                            setImage(e.target.files[0])
-                        }
-                        placeholder="Upload an image showing your issue"
-                        required
-                    />
-                    <button
-                        type="reset"
-                        value="reset"
-                        onClick={() => handleReset()}
-                    >
-                        Reset
-                    </button>
-                    <button
-                        type="submit"
-                        value="Submit"
-                        onClick={(e) => handleSubmit(e)}
-                    >
-                        Submit
-                    </button>
-                </form>
-            </fieldset>
-        </div>
-    );
-}
+    try {
+      const response = await axios.post("http://localhost:8000/api/cases/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert("Case submitted successfully!");
+      resetForm();
+      setImagePreview(null);
+    } catch (error) {
+      console.error("Error submitting case:", error);
+      alert("Failed to submit case");
+    }
+  };
+
+  return (
+    <Formik
+      initialValues={{
+        name: "",
+        email: "",
+        phone: "",
+        caseType: "",
+        caseDescription: "",
+        caseImage: null,
+      }}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ setFieldValue }) => (
+        <Form className="p-4 max-w-lg mx-auto border rounded shadow-lg">
+          {/* Name Field */}
+          <div className="mb-4">
+            <label className="block font-semibold">Name</label>
+            <Field type="text" name="name" className="w-full p-2 border rounded" />
+            <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* Email Field */}
+          <div className="mb-4">
+            <label className="block font-semibold">Email</label>
+            <Field type="email" name="email" className="w-full p-2 border rounded" />
+            <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* Phone Field */}
+          <div className="mb-4">
+            <label className="block font-semibold">Phone</label>
+            <Field type="text" name="phone" className="w-full p-2 border rounded" />
+            <ErrorMessage name="phone" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* Case Type Dropdown */}
+          <div className="mb-4">
+            <label className="block font-semibold">Case Type</label>
+            <Field as="select" name="caseType" className="w-full p-2 border rounded">
+              <option value="">Select a case type</option>
+              {caseTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </Field>
+            <ErrorMessage name="caseType" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* Case Description */}
+          <div className="mb-4">
+            <label className="block font-semibold">Case Description</label>
+            <Field as="textarea" name="caseDescription" className="w-full p-2 border rounded" />
+            <ErrorMessage name="caseDescription" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* Image Upload */}
+          <div className="mb-4">
+            <label className="block font-semibold">Case Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(event) => {
+                const file = event.currentTarget.files?.[0];
+                if (file) {
+                  setFieldValue("caseImage", file);
+                  setImagePreview(URL.createObjectURL(file));
+                }
+              }}
+              className="w-full p-2 border rounded"
+            />
+            <ErrorMessage name="caseImage" component="div" className="text-red-500 text-sm" />
+            {imagePreview && <img src={imagePreview} alt="Preview" className="mt-2 w-32 h-32" />}
+          </div>
+
+          {/* Submit Button */}
+          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+            Submit Case
+          </button>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
 export default CaseForm;

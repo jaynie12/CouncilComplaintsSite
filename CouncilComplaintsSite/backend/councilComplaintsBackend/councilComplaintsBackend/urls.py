@@ -24,10 +24,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [ 
-    path('api/cases', views.cases_list, name='cases_list'),
+    path('api/cases/', views.cases, name='cases'),
     path('api/cases/id', views.case_details, name='case_details'),
     path('api/cases/username', views.case_by_user, name='case_by_user'),
-]
+    path('api/case-types/', get_case_types, name='case-types'),
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

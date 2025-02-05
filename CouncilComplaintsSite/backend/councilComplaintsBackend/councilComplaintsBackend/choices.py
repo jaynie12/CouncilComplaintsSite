@@ -1,4 +1,4 @@
-CASE_TYPES = [
+CASE_TYPE = [
     ("Potholes", "Potholes"),
     ("Street lighting", "Street lighting"),
     ("Graffiti", "Graffiti"),

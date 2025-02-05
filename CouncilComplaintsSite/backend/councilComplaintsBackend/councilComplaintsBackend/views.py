@@ -4,15 +4,17 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from rest_framework.response import Response
-import choices
-
+from .choices import CASE_TYPE, STATUS 
 from .models import *
 from .serializers import *
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import status, viewsets, filters
+from rest_framework.permissions import IsAuthenticated
 
 #https://www.bezkoder.com/django-crud-mysql-rest-framework/
 
 @api_view(['GET', 'POST'])
-def cases_list(request):
+def cases(request):
     """ GET list of cases, POST a new cases
     Args:
         request (Request): incoming request from the client side
@@ -26,8 +28,10 @@ def cases_list(request):
         # 'safe=False' for objects serialization
 
     elif request.method == 'POST':
+        print('here')
         case_serializer = CaseCreateSerializer(data=request.data)
-        
+        parser_classes = (MultiPartParser, FormParser)
+        print(case_serializer)
         # Validate and save the data
         if case_serializer.is_valid():
             case_serializer.save()
@@ -91,8 +95,29 @@ def get_case_types(request):
         Response: Objet with the JSON data with a list of case types
     """
     my_choices = []
-    choice_dict = dict(choices.CASE_TYPES)
+    choice_dict = dict(CASE_TYPE)
     for key, value in choice_dict.items():
         itered_dict = {"key": key, "value": value}
         my_choices.append(itered_dict)
     return Response(my_choices, status=status.HTTP_200_OK)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get']
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['updated']
+    ordering = ['-updated']
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return User.objects.all()
+
+    def get_object(self):
+        lookup_field_value = self.kwargs[self.lookup_field]
+
+        obj = User.objects.get(lookup_field_value)
+        self.check_object_permissions(self.request, obj)
+
+        return obj
