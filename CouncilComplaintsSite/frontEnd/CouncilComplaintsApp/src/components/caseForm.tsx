@@ -1,13 +1,23 @@
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 
 const CaseForm = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [caseType, setCaseType] = useState([]);
 
   // Case type options
-  const caseTypes = ["Potholes", "Street lighting", "Graffiti", "Anti-Social behavior", "Other"];
+ 
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/case-types/")
+      .then((response) => {
+        setCaseType(response.data); // Update state with fetched choices
+      })
+      .catch((error) => {
+        console.error("Error fetching case types:", error);
+      });
+  }, []);
 
   // Form Validation Schema
   const validationSchema = Yup.object().shape({
@@ -30,13 +40,13 @@ const CaseForm = () => {
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("email", values.email);
-    formData.append("phone", values.phone);
+    formData.append("telephone", values.phone);
     formData.append("case_type", values.caseType);
-    formData.append("case_description", values.caseDescription);
+    formData.append("case_short_description", values.caseDescription);
     formData.append("case_image", values.caseImage);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/cases/", formData, {
+      const response = axios.post("http://localhost:8000/api/cases/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Case submitted successfully!");
@@ -89,9 +99,9 @@ const CaseForm = () => {
             <label className="block font-semibold">Case Type</label>
             <Field as="select" name="caseType" className="w-full p-2 border rounded">
               <option value="">Select a case type</option>
-              {caseTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
+              {caseType.map((choice) => (
+                <option key={choice.key} value={choice.value}>
+                  {choice.key}
                 </option>
               ))}
             </Field>

@@ -49,26 +49,26 @@ INSTALLED_APPS = [
 ]
 
 
-# Django REST Framework settings
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT Authentication
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # Require authentication by default
-    ),
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    )
-}
+# # Django REST Framework settings
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT Authentication
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',  # Require authentication by default
+#     ),
+#     'DEFAULT_RENDERER_CLASSES': (
+#         'rest_framework.renderers.JSONRenderer',
+#     )
+# }
 
-from datetime import timedelta
+# from datetime import timedelta
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+#     'AUTH_HEADER_TYPES': ('Bearer',),
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

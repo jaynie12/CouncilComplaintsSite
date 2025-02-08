@@ -11,9 +11,11 @@ class CaseSerializer(serializers.ModelSerializer):
         fields = ['case_type', 'status', 'case_short_description','created_at', 'user_raised', 'staff_assigned', 'case_image']
 
 class CaseCreateSerializer(serializers.ModelSerializer):
+    case_image = serializers.ImageField(required=False) 
+
     class Meta:
         model = Case
-        fields = ['case_type', 'case_short_description', 'case_image']
+        fields = ['name' ,'email', 'telephone', 'case_type', 'case_short_description', 'case_image']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
