@@ -25,8 +25,13 @@ from django.conf.urls.static import static
 
 urlpatterns = [ 
     path('api/cases/', views.cases, name='cases'),
-    path('api/cases/id', views.case_details, name='case_details'),
+    path('api/case_details/<str:case_id>', views.case_details, name='case_details'),
     path('api/cases/username', views.case_by_user, name='case_by_user'),
     path('api/case-types/', get_case_types, name='case-types'),
+    path('api/count-case-types/', count_case_types, name='case-type-count'),
+    path('api/get-data-choices/', get_data_choices, name='get-data-choices'),
+    path('api/count-case-status/', count_case_status, name='case-type-status'),
+    path('api/choice/<str:filter>', count_dynamic, name='choice'),
+    
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

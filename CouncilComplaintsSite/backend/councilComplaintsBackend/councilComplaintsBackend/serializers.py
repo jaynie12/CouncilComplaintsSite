@@ -6,11 +6,25 @@ from django.contrib.auth.models import User
 
 
 class CaseSerializer(serializers.ModelSerializer):
+    staff_assigned = serializers.StringRelatedField()
     class Meta:
         model = Case
-        fields = ['case_type', 'status', 'case_short_description','created_at', 'user_raised', 'staff_assigned', 'case_image']
+        fields = ['id', 'case_type', 'status', 'case_short_description', 'name', 'staff_assigned','comments']
 
 class CaseCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating a Case instance.
+    Fields:
+        name (str): The name of the person creating the case.
+        email (str): The email address of the person creating the case.
+        telephone (str): The telephone number of the person creating the case.
+        case_type (str): The type/category of the case.
+        case_short_description (str): A short description of the case.
+        case_image (ImageField, optional): An optional image related to the case.
+    Meta:
+        model (Case): The model that this serializer is based on.
+        fields (list): The list of fields to be included in the serialized output.
+    """
     case_image = serializers.ImageField(required=False) 
 
     class Meta:

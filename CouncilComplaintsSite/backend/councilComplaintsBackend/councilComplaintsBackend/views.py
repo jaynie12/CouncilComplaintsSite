@@ -4,10 +4,11 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from rest_framework.response import Response
-from .choices import CASE_TYPE, STATUS 
+from .choices import CASE_TYPE, STATUS,FILTER_CHOICES 
 from .models import *
 from .serializers import *
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.db.models import Count
 from rest_framework import status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 
@@ -41,7 +42,7 @@ def cases(request):
 
  
 @api_view(['GET', 'PUT'])
-def case_details(request, id):
+def case_details(request, case_id ):
     """GET / PUT cases by 'case id'
 
     Args:
@@ -53,7 +54,7 @@ def case_details(request, id):
     """
     # find tutorial by pk (id)
     try: 
-        case = Case.objects.get(pk=id) 
+        case = Case.objects.get(pk=case_id) 
     except Case.DoesNotExist: 
         return JsonResponse({'message': 'The case does not exist'}, status=status.HTTP_404_NOT_FOUND) 
  
@@ -63,6 +64,7 @@ def case_details(request, id):
     elif request.method == 'PUT': 
         case_data = JSONParser().parse(request) 
         case_serializer = CaseSerializer(case, data=case_data) 
+        user_serializer = UserSerializer(case, data=case_data.get('staff_assigned'))
         if case_serializer.is_valid(): 
             case_serializer.save() 
             return JsonResponse(case_serializer.data) 
@@ -101,6 +103,56 @@ def get_case_types(request):
         my_choices.append(itered_dict)
     return Response(my_choices, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def get_data_choices(request):
+    """Get all case types
+
+    Args:
+        request (request):The incoming API request object.
+
+    Returns:
+        Response: Objet with the JSON data with a list of case types
+    """
+    my_choices = []
+    choice_dict = dict(FILTER_CHOICES)
+    for key, value in choice_dict.items():
+        itered_dict = {"key": key, "value": value}
+        my_choices.append(itered_dict)
+    return Response(my_choices, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def count_case_types(request):
+    """
+    API endpoint to get the count of cases grouped by case type.
+    """
+    case_counts = Case.objects.values('case_type').annotate(total=Count('case_type'))
+    
+    return Response(case_counts)
+
+@api_view(['GET'])
+def count_case_status(request):
+    """
+    API endpoint to get the count of cases grouped by case type.
+    """
+    case_counts = Case.objects.values('status').annotate(total=Count('status'))
+    
+    return Response(case_counts)
+
+@api_view(['GET'])
+def count_dynamic(request,filter):
+    """
+    API endpoint to get the count of cases grouped by case type.
+    """
+    if filter == 'staff_assigned':
+        case_counts = Case.objects.values('staff_assigned__username').annotate(total=Count('staff_assigned'))
+    else:
+        case_counts = Case.objects.values(filter).annotate(total=Count(filter))
+
+    
+    return Response(case_counts)
+
+
 
 class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
@@ -120,4 +172,8 @@ class UserViewSet(viewsets.ModelViewSet):
         obj = User.objects.get(lookup_field_value)
         self.check_object_permissions(self.request, obj)
 
-        return obj
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """        return obj

@@ -11,3 +11,11 @@ STATUS = [
     ("Complete", "Complete"),
     ("Cancelled", "Cancelled"),
 ]
+
+FILTER_CHOICES =  [
+    ( "Name of user", "name"),
+    ( "Case Type", "case_type"),
+    ("Status", "status"),
+    ("Staff Assigned", "staff_assigned")
+    
+]
