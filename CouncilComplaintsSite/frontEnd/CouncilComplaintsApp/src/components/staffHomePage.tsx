@@ -29,7 +29,7 @@ export function CustomButton({ children, ...attributes }: Props) {
       }} 
       {...attributes}
     >
-      {children} /* Raise a case, Analyze issues and cases, Update and Assign cases: Children are the names of the buttons using this format */
+      {children} 
     </button>
 </div>
 
@@ -37,7 +37,7 @@ export function CustomButton({ children, ...attributes }: Props) {
 }
 
 
-export default function staffHomePage {
+export default function staffHomePage() {
     const [raiseCaseClicked, setRaiseCaseClicked] = useState(false);
     const [dataAnalysisClicked, setDataAnalysisClicked] = useState(false);
     const [updateCaseClicked, setUpdateCaseClicked] = useState(false);
