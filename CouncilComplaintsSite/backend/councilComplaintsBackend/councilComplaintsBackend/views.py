@@ -11,8 +11,8 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Count
 from rest_framework import status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated
+#inspiration: #https://www.bezkoder.com/django-crud-mysql-rest-framework/
 
-#https://www.bezkoder.com/django-crud-mysql-rest-framework/
 
 @api_view(['GET', 'POST'])
 def cases(request):
@@ -29,7 +29,6 @@ def cases(request):
         # 'safe=False' for objects serialization
 
     elif request.method == 'POST':
-        print('here')
         case_serializer = CaseCreateSerializer(data=request.data)
         parser_classes = (MultiPartParser, FormParser)
         print(case_serializer)
@@ -85,6 +84,8 @@ def case_by_user(request, username):
     if request.method == 'GET': 
         case_serializer = CaseSerializer(cases, many=True)
         return JsonResponse(case_serializer.data, safe=False)
+    
+
 
 @api_view(['GET'])
 def get_case_types(request):
@@ -133,7 +134,7 @@ def count_case_types(request):
 @api_view(['GET'])
 def count_case_status(request):
     """
-    API endpoint to get the count of cases grouped by case type.
+    API endpoint to get the count of cases grouped by case status.
     """
     case_counts = Case.objects.values('status').annotate(total=Count('status'))
     
@@ -176,4 +177,5 @@ class UserViewSet(viewsets.ModelViewSet):
 
         Returns:
             _type_: _description_
-        """        return obj
+        """
+        return obj

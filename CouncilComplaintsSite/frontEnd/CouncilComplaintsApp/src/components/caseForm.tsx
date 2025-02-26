@@ -38,6 +38,7 @@ const CaseForm = () => {
   // Handle Form Submission
   const handleSubmit = async (values: any, { resetForm }: any) => {
     const formData = new FormData();
+    formData.append("id", Math.floor(Math.random() * (10000000 - 1 + 1) + 1));
     formData.append("name", values.name);
     formData.append("email", values.email);
     formData.append("telephone", values.phone);
@@ -46,12 +47,13 @@ const CaseForm = () => {
     formData.append("case_image", values.caseImage);
 
     try {
-      const response = axios.post("http://localhost:8000/api/cases/", formData, {
+      const response = await axios.post("http://localhost:8000/api/cases/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("Case submitted successfully!");
-      resetForm();
+      const case_id = response.data.id.toString();
+      alert("Case submitted successfully! If you want to get in touch with us regarding your case, please note down your case ID: " + case_id);
       setImagePreview(null);
+      resetForm();
     } catch (error) {
       console.error("Error submitting case:", error);
       alert("Failed to submit case");

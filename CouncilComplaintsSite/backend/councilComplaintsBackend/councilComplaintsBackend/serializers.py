@@ -29,7 +29,7 @@ class CaseCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Case
-        fields = ['name' ,'email', 'telephone', 'case_type', 'case_short_description', 'case_image']
+        fields = ['id','name' ,'email', 'telephone', 'case_type', 'case_short_description', 'case_image']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -12,7 +12,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export function CustomButton({ children, ...attributes }: Props) {
             
   return (
-    <div>
+    <div >
     <button
       type="button"
 
@@ -21,7 +21,8 @@ export function CustomButton({ children, ...attributes }: Props) {
         width: "300px", 
         height: "100px", 
         display: "flex", 
-        flexDirection: "column", 
+        justifyContent: "center",
+
         alignItems: "center", 
         gap: "10px",
         margin: "5em",
@@ -42,19 +43,26 @@ export default function staffHomePage() {
     const [dataAnalysisClicked, setDataAnalysisClicked] = useState(false);
     const [updateCaseClicked, setUpdateCaseClicked] = useState(false);
 
-    return (
-      <div>
-        <CustomButton onClick={() => setRaiseCaseClicked(true)}>
+    return (  
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+      <div   style={{ 
+        display: "flex", 
+        justifyContent: "center", 
+        gap: "20px", 
+        marginTop: "20px",
+        marginBottom: "20px"
+      }}>
+        <CustomButton onClick={() =>{ setRaiseCaseClicked(true); setDataAnalysisClicked(false); setUpdateCaseClicked(false);}}>
           Raise a case
         </CustomButton>
-        <CustomButton onClick={() => setDataAnalysisClicked(true)}>
+        <CustomButton onClick={() => { setDataAnalysisClicked(true); setUpdateCaseClicked(false);  setRaiseCaseClicked(false)}}>
           Analyze issues and cases
         </CustomButton>
-        <CustomButton onClick={() =>setUpdateCaseClicked(true)}>
+        <CustomButton onClick={() =>{setUpdateCaseClicked(true); setRaiseCaseClicked(false); setDataAnalysisClicked(false);}}>
           Update and Assign cases
         </CustomButton>
-  
-        <div className="content">
+        </div>
+        <div style={{ marginTop: "20px", width: "80%", maxWidth: "800px", padding: "20px", textAlign: "center" }} className="content">
           {raiseCaseClicked === true && <CaseForm />}
           {dataAnalysisClicked === true && <CaseAnalysisForm />}
           {updateCaseClicked === true&& <Table />}

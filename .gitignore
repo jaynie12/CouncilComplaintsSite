@@ -6,7 +6,10 @@ main
 venv
 /venv
 .venv
-
+/Screenshot_2023-07-04_213755_C6xJ1Oe.png
+C:\Users\jayni\Code\SoftwareEngineeringOneCoursework\CouncilComplaintsSite\venv
+screenshot*.png
+testo*.png
 
 C:\Users\jayni\Code\SoftwareEngineeringOneCoursework\venv
 CouncilComplaintsSite/backend/councilComplaintsBackend/db.sqlite3
@@ -15,3 +18,4 @@ CouncilComplaintsSite/CouncilComplaintsSite/backend/councilComplaintsBackend/med
 ./media
 .media
 /C:\Users\jayni\Code\SoftwareEngineeringOneCoursework\CouncilComplaintsSite\CouncilComplaintsSite\backend\councilComplaintsBackend\media
+CouncilComplaintsSite/backend/councilComplaintsBackend/media/media/case_images/Screenshot_2023-07-04_213755_C6xJ1Oe.png
