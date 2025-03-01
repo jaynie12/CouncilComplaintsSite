@@ -7,6 +7,19 @@ import datetime
 
 
 class CaseModelTest(TestCase):
+    """
+    Test suite for the Case model.
+    This test suite includes the following test cases:
+    - `setUp`: Initializes a user and a case instance for testing.
+    - `test_nullable_fields`: Verifies that certain fields can be null.
+    - `test_max_length`: Checks the maximum length constraints of specific fields.
+    - `test_unique_fields`: Ensures that unique constraints are enforced on fields.
+    - `test_default_values`: Tests the default values of the case fields.
+    - `test_case_creation`: Validates the creation of a new case instance.
+    - `test_case_update`: Tests updating an existing case instance.
+    - `test_user_reference`: Ensures that the staff_assigned field references a valid user.
+    - `test_case_delete`: Verifies the deletion of a case instance.
+    """
 
     @classmethod
     def setUp(self):
@@ -91,6 +104,12 @@ class CaseModelTest(TestCase):
         self.case.save()
         self.assertEqual(self.case.name, 'Updated Test Case')
     
+    def test_user_reference(self):
+        with self.assertRaises(Exception):
+            self.case.staff_assigned = 'John Doe'
+            self.case.save()
+    
     def test_case_delete(self):
         self.case.delete()
         self.assertFalse(Case.objects.filter(id=1).exists())
+
