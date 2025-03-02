@@ -9,7 +9,7 @@ class CaseSerializer(serializers.ModelSerializer):
     staff_assigned = serializers.StringRelatedField()
     class Meta:
         model = Case
-        fields = ['id', 'case_type', 'status', 'issue_description','impact_description' , 'proposed_action', 'name', 'staff_assigned','comments']
+        fields = ['id', 'case_type', 'status', 'issue_description','impact_description' , 'proposed_action', 'name', 'staff_assigned','email', 'comments']
 
 class CaseCreateSerializer(serializers.ModelSerializer):
     """
@@ -31,7 +31,7 @@ class CaseCreateSerializer(serializers.ModelSerializer):
         model = Case
         fields = ['id','name' ,'email', 'telephone', 'case_type', 'issue_description', 'impact_description','proposed_action' ,'case_image']
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'password']
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['username', 'password']

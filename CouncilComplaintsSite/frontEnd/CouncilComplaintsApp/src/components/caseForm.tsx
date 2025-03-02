@@ -27,7 +27,7 @@ const CaseForm = () => {
       .matches(/^\d{10}$/, "Phone number must be 10 digits")
       .required("Phone number is required"),
     caseType: Yup.string().required("Case type is required"),
-    caseDescription: Yup.string().required("Description is required"),
+    issue_description: Yup.string().required("Description is required"),
     caseImage: Yup.mixed()
       .required("Image is required")
       .test("fileSize", "File too large", (value: any) => {
@@ -43,7 +43,9 @@ const CaseForm = () => {
     formData.append("email", values.email);
     formData.append("telephone", values.phone);
     formData.append("case_type", values.caseType);
-    formData.append("case_short_description", values.caseDescription);
+    formData.append("issue_description", values.issue_description);
+    formData.append("impact_description", values.impact_description);
+    formData.append("proposed_action", values.proposed_action);
     formData.append("case_image", values.caseImage);
 
     try {
@@ -67,7 +69,9 @@ const CaseForm = () => {
         email: "",
         phone: "",
         caseType: "",
-        caseDescription: "",
+        issue_description: "",
+        impact_description: "",
+        proposed_action: "",
         caseImage: null,
       }}
       validationSchema={validationSchema}
@@ -112,9 +116,21 @@ const CaseForm = () => {
 
           {/* Case Description */}
           <div className="mb-4">
-            <label className="block font-semibold">Case Description</label>
-            <Field as="textarea" name="caseDescription" className="w-full p-2 border rounded" />
-            <ErrorMessage name="caseDescription" component="div" className="text-red-500 text-sm" />
+            <label className="block font-semibold mb-2">Describe your issue</label>
+            <Field as="textarea" name="issue_description" className="w-full p-2 border rounded" />
+            <ErrorMessage name="issue_description" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-semibold mb-2">How have you been impacted by the issue?</label>
+            <Field as="textarea" name="impact_description" className="w-full p-2 border rounded" />
+            <ErrorMessage name="impact_description" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-semibold mb-2">What action do you want us to take?</label>
+            <Field as="textarea" name="proposed_action" className="w-full p-2 border rounded" />
+            <ErrorMessage name="proposed_action" component="div" className="text-red-500 text-sm" />
           </div>
 
           {/* Image Upload */}

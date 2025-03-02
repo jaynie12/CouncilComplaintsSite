@@ -30,9 +30,9 @@ SECRET_KEY = 'django-insecure-swo&l-eqy9idfk1n-7)yp#77=$*dudv-w+6v9!*b758$fd*q#n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS=['*']
 
-
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']  # Frontend URL for CSRF validation
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,20 +49,18 @@ INSTALLED_APPS = [
 ]
 
 
-# # Django REST Framework settings
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT Authentication
-#     ),
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',  # Require authentication by default
-#     ),
-#     'DEFAULT_RENDERER_CLASSES': (
-#         'rest_framework.renderers.JSONRenderer',
-#     )
-# }
+# Django REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # No JWT or Basic Authentication, so we can leave this empty or just use default
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # This allows anyone to access the login view without authentication
+    ]
+}
 
-# from datetime import timedelta
+
+from datetime import timedelta
 
 # SIMPLE_JWT = {
 #     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
@@ -70,21 +68,22 @@ INSTALLED_APPS = [
 #     'AUTH_HEADER_TYPES': ('Bearer',),
 # }
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Ensure this is placed at the top
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
+
 
 ROOT_URLCONF = 'councilComplaintsBackend.urls'
 
-
-CORS_ALLOW_ALL_ORIGINS =True
 
 TEMPLATES = [
     {
@@ -157,7 +156,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
-]

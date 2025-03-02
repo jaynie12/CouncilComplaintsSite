@@ -1,16 +1,19 @@
-from rest_framework import viewsets, status, authentication, permissions
 from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view, authentication_classes
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from .choices import CASE_TYPE, STATUS,FILTER_CHOICES 
+from django.contrib.auth.models import User
 from .models import *
 from .serializers import *
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Count
-from rest_framework import status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status, viewsets, filters
 #inspiration: #https://www.bezkoder.com/django-crud-mysql-rest-framework/
 
 
@@ -154,28 +157,30 @@ def count_dynamic(request,filter):
     return Response(case_counts)
 
 
+#https://docs.djangoproject.com/el/2.0//topics/auth/passwords/
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password  # Used to verify hashed passwords
 
-class UserViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['updated']
-    ordering = ['-updated']
+@api_view(['POST'])
+#https://docs.djangoproject.com/en/5.1/topics/auth/default/
+def staff_login(request):
+# Get username and password from the request body
+    username = request.data.get('username')
+    password = request.data.get('password')
 
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return User.objects.all()
+    # Check if username and password are provided
+    if not username or not password:
+        return Response({"detail": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_object(self):
-        lookup_field_value = self.kwargs[self.lookup_field]
-
-        obj = User.objects.get(lookup_field_value)
-        self.check_object_permissions(self.request, obj)
-
-        """_summary_
-
-        Returns:
-            _type_: _description_
-        """
-        return obj
+    try:
+        # Query the User model to check if the username exists
+        user = User.objects.get(username=username)
+        
+        # Check if the provided password matches the stored (hashed) password
+        if check_password(password, user.password):
+            return Response({"detail": "Login successful."})
+        else:
+            return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    except User.DoesNotExist:
+        return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)

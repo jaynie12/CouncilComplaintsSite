@@ -32,6 +32,6 @@ urlpatterns = [
     path('api/get-data-choices/', views.get_data_choices, name='get-data-choices'),
     path('api/count-case-status/', views.count_case_status, name='case-type-status'),
     path('api/choice/<str:filter>', views.count_dynamic, name='choice'),
-    
+    path('api/staff-login/', views.staff_login, name='staff-login'),    
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

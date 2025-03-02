@@ -1,6 +1,8 @@
 export type Cases = {
     id: number
-    case_short_description: string
+    issue_description: string
+    impact_description: string
+    proposed_action: string
     status: string
     staff_assigned: string
     name:string

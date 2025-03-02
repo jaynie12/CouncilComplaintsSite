@@ -14,11 +14,31 @@ export const columns = [
     cell: CaseList,
     meta: {
       type: 'number',
-      readonly: true,
+      readonly:true,
     },
   }),
-  columnHelper.accessor('case_short_description', {
+  columnHelper.accessor('issue_description', {
     header: 'Case Short Description',
+    cell: CaseList,
+    meta: {
+      type: 'text',
+      required: true,
+      pattern: '^[a-zA-Z ]+$',
+      readonly:true,
+    },
+  }),
+  columnHelper.accessor('impact_description', {
+    header: 'Impact Description',
+    cell: CaseList,
+    meta: {
+      type: 'text',
+      required: true,
+      pattern: '^[a-zA-Z ]+$',
+      readonly:true,
+    },
+  }),
+  columnHelper.accessor('proposed_action', {
+    header: 'Proposed Action',
     cell: CaseList,
     meta: {
       type: 'text',
@@ -63,8 +83,6 @@ export const columns = [
         cell: CaseList,
         meta: {
         type: 'text',
-        required: true,
-        pattern: '^[a-zA-Z ]+$',
         readonly:true,
         },
     }),

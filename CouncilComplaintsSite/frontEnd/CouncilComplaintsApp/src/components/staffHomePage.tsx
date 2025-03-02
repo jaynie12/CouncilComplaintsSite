@@ -38,7 +38,7 @@ export function CustomButton({ children, ...attributes }: Props) {
 }
 
 
-export default function staffHomePage() {
+export default function StaffHomePage() {
     const [raiseCaseClicked, setRaiseCaseClicked] = useState(false);
     const [dataAnalysisClicked, setDataAnalysisClicked] = useState(false);
     const [updateCaseClicked, setUpdateCaseClicked] = useState(false);

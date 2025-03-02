@@ -1,72 +1,84 @@
-import React from 'react';
-import { withFormik, Form, Field } from 'formik';
+import React, { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
+import CustomButton from './staffHomePage';
 
-const LoginPage = (props) => {
-  const loginPageStyle = {
-    margin: "32px auto 37px",
-    maxWidth: "530px",
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "10px",
-    boxShadow: "0px 0px 10px 10px rgba(0,0,0,0.15)"
-  };
-  const { touched, errors } = props;
-  return(
-    <React.Fragment>
-      <div className="container">
-        <div className="login-wrapper" style={loginPageStyle}>
-          <h2>Login Page</h2>
-          <Form className="form-container">
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <Field type="text" name="username" className={"form-control"} placeholder="Username" />
-              { touched.username && errors.username && <span className="help-block text-danger">{errors.username}</span> }
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <Field type="password" name="password" className={"form-control"} placeholder="Password" />
-              { touched.password && errors.password && <span className="help-block text-danger">{errors.password}</span> }
-            </div>
-            <button type="submit" className="btn btn-primary">Login</button>
-          </Form>
-        </div>
-      </div>
-    </React.Fragment>
-  );
+interface LoginProps {
+  username?: string;
+  password?: string;
 }
 
-const LoginFormik = withFormik({
-  mapPropsToValues: (props) => {
-    return {
-      username: props.username || '',
-      password: props.password || ''
-    }
-  },
-  validationSchema: Yup.object().shape({
-    username: Yup.string().required('Username is required'),
-    password: Yup.string().required('Password is required')
-  }),
-  handleSubmit: (values) => {
-    const REST_API_URL = "YOUR_REST_API_URL";
-    fetch(REST_API_URL, {
-      method: 'post',
-      body: JSON.stringify(values)
-    }).then(response=> {
-      if (response.ok) {
-        return response.json();
-      } else {
-        // HANDLE ERROR
-        throw new Error('Something went wrong');
-      }
-    }).then(data => {
-      // HANDLE RESPONSE DATA
-      console.log(data);
-    }).catch((error) => {
-      // HANDLE ERROR
-      console.log(error);
-    });
-  }
-})(LoginPage);
+const StaffLogin: React.FC<LoginProps> = (props) => {
+  const [isVisible, setIsVisible] = useState(true);
 
-export default LoginFormik
+  const initialValues = {
+    username: props.username || '',
+    password: props.password || '',
+  };
+
+  const validationSchema = Yup.object().shape({
+    username: Yup.string().required('Username is required'),
+    password: Yup.string().required('Password is required'),
+  });
+
+  const handleSubmit = async (values: LoginProps) => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/staff-login/', values, {
+        headers: {
+          'Content-Type': 'application/json', // Ensure you're sending JSON
+        },
+      });
+      const token = (response.data as { detail: string }).detail;
+
+      if (token === 'Login successful.') {  
+        alert('Login successful!');
+        setIsVisible(false);  // Hide the login form after success
+      } else {
+        alert('Login failed!');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      alert('Login failed!');
+    }
+  };
+
+  return (
+    <div className="p-4 max-w-lg mx-auto border rounded shadow-lg">
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {() => (
+          <Form>
+            {isVisible && (
+              <>
+                <div className="mb-4">
+                  <label className="block font-semibold">Username</label>
+                  <Field type="text" name="username" className="w-full p-2 border rounded" />
+                  <ErrorMessage name="username" component="div" className="text-red-500 text-sm" />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block font-semibold">Password</label>
+                  <Field type="password" name="password" className="w-full p-2 border rounded" />
+                  <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
+                </div>
+
+                <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded">
+                  Login
+                </button>
+              </>
+            )}
+          </Form>
+        )}
+      </Formik>
+
+      {/* Show CustomButton when login is successful */}
+      {!isVisible && <CustomButton />}
+    </div>
+  );
+};
+
+export default StaffLogin;
