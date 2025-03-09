@@ -1,11 +1,13 @@
 .LoginForm {
     text-align: center;
-    }
-    form {
-    border:2px solid green;
+}
+
+form {
+    border: 2px solid green;
     padding: 30px;
-    }
-    .LoginForm-header {
+}
+
+.LoginForm-header {
     background-color: white;
     min-height: 100vh;
     display: flex;
@@ -14,25 +16,25 @@
     justify-content: center;
     font-size: calc(10px + 2vmin);
     color: black;
-    }
-    .name {
-        text-rendering: auto;
-        color: black;
-        letter-spacing: normal;
-        word-spacing: normal;
-        text-transform: none;
-        text-indent: 0px;
-        display: inline-block;
-        text-align: center;
-        align-items: flex-start;
-        cursor: default;
-        background-color: buttonface;
-        box-sizing: border-box;
-        margin: 0em;
-        font: 400 11px system-ui;
-        padding: 1px 7px 2px;
-        border-width: 1px;
-        border-style: solid;
-        border-color: rgb(35, 28, 28) rgb(209, 209, 209) rgb(186, 186, 186);
-        border-image: initial;
-    }
+}
+
+.username {
+    text-rendering: auto;
+    color: black;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-align: center;
+    align-items: flex-start;
+    cursor: default;
+    background-color: buttonface;
+    box-sizing: border-box;
+    margin: 0em;
+    font: 400 11px system-ui;
+    padding: 1px 7px 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(35, 28, 28) rgb(209, 209, 209) rgb(186, 186, 186);
+    border-image: initial;
+}

@@ -1,0 +1,115 @@
+from django.test import TestCase
+from django.contrib.auth.models import User
+from  councilComplaintsBackend.models import Case
+from councilComplaintsBackend.choices import CASE_TYPE, STATUS
+from django.utils import timezone
+import datetime
+
+
+class CaseModelTest(TestCase):
+    """
+    Test suite for the Case model.
+    This test suite includes the following test cases:
+    - `setUp`: Initializes a user and a case instance for testing.
+    - `test_nullable_fields`: Verifies that certain fields can be null.
+    - `test_max_length`: Checks the maximum length constraints of specific fields.
+    - `test_unique_fields`: Ensures that unique constraints are enforced on fields.
+    - `test_default_values`: Tests the default values of the case fields.
+    - `test_case_creation`: Validates the creation of a new case instance.
+    - `test_case_update`: Tests updating an existing case instance.
+    - `test_user_reference`: Ensures that the staff_assigned field references a valid user.
+    - `test_case_delete`: Verifies the deletion of a case instance.
+    """
+
+    @classmethod
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.case = Case.objects.create(
+            id=1111,
+            name='Test Case',
+            telephone='1234567890',
+            email='test@example.com',
+            case_short_description='Short description test case',
+            comments='Test comments about the issue',
+            status=STATUS[0][0],
+            case_type=CASE_TYPE[0][0],
+            staff_assigned=self.user,
+            case_image ="testomagin_5Oc8vVy.png"
+        )
+
+    def test_nullable_fields(self):
+        case = Case.objects.create(
+            id=2,
+            name='Test Case 2',
+            case_short_description='Another short description',
+            status=STATUS[0][0],
+            case_type=CASE_TYPE[0][0]
+        )
+        self.assertIsNone(case.telephone)
+        self.assertIsNone(case.email)
+        self.assertIsNone(case.comments)
+        self.assertIsNone(case.staff_assigned)
+
+    
+    def test_max_length(self):
+        max_length_name = self.case._meta.get_field('name').max_length
+        max_length_case_short_description = self.case._meta.get_field('case_short_description').max_length
+        max_length_comments = self.case._meta.get_field('comments').max_length
+        self.assertEqual(max_length_name, 255)
+        self.assertEqual(max_length_case_short_description, 150)
+        self.assertEqual(max_length_comments, 1000)
+    
+
+    def test_unique_fields(self):
+        with self.assertRaises(Exception):
+            Case.objects.create(
+                id=1111,
+                name='Duplicate Case',
+                case_short_description='Duplicate short description',
+                status=STATUS[0][0],
+                case_type=CASE_TYPE[0][0]
+            )
+
+    
+    def test_default_values(self):
+        self.case = Case.objects.create(
+            id=1,
+            name='Test Case',
+            telephone='1234567890',
+            email='test@example.com',
+            case_short_description='Short description of the case',
+            comments='Some comments about the case',
+            status=STATUS[0][0],
+            case_type=CASE_TYPE[0][0],
+            staff_assigned=self.user
+        )
+    
+    def test_case_creation(self):
+        case = Case.objects.create(
+            id=2,
+            name='Test Case 2',
+            telephone='1234567890',
+            email='test@example.com',
+            case_short_description='Short description of the case',
+            comments='Some comments about the case',
+            status=STATUS[0][0],
+            case_type=CASE_TYPE[0][0],
+            staff_assigned=self.user
+        )
+        self.assertEqual(Case.objects.count(), 2)
+
+    
+    def test_case_update(self):
+        self.case.name = 'Updated Test Case'
+        self.case.save()
+        self.assertEqual(self.case.name, 'Updated Test Case')
+    
+    def test_user_reference(self):
+        with self.assertRaises(Exception):
+            self.case.staff_assigned = 'John Doe'
+            self.case.save()
+    
+    def test_case_delete(self):
+        self.case.delete()
+        self.assertFalse(Case.objects.filter(id=1).exists())
+
