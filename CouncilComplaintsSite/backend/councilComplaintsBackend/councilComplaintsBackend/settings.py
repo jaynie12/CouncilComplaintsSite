@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'councilComplaintsBackend',
     'rest_framework',
     'corsheaders',
+    'drf_yasg',
     'rest_framework.authtoken',
 ]
 

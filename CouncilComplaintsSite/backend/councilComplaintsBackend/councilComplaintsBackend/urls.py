@@ -22,6 +22,23 @@ from . import views
 router = DefaultRouter()
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+# Swagger schema view
+schema_view = get_schema_view(
+    openapi.Info(
+        title="My API",
+        default_version='v1',
+        description="API documentation for Council Complaints App",
+        contact=openapi.Contact(email="contact@myapi.local"),
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+)
+
+
 
 urlpatterns = [ 
     path('api/cases/', views.cases, name='cases'),
@@ -32,6 +49,7 @@ urlpatterns = [
     path('api/get-data-choices/', views.get_data_choices, name='get-data-choices'),
     path('api/count-case-status/', views.count_case_status, name='case-type-status'),
     path('api/choice/<str:filter>', views.count_dynamic, name='choice'),
-    path('api/staff-login/', views.staff_login, name='staff-login'),    
+    path('api/staff-login/', views.staff_login, name='staff-login'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

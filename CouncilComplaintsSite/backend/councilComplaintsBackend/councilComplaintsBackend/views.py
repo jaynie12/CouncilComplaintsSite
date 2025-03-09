@@ -15,6 +15,7 @@ from django.db.models import Count
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, viewsets, filters
 #inspiration: #https://www.bezkoder.com/django-crud-mysql-rest-framework/
+from drf_yasg.utils import swagger_auto_schema
 
 
 @api_view(['GET', 'POST'])
@@ -162,7 +163,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password  # Used to verify hashed passwords
 
 @api_view(['POST'])
-#https://docs.djangoproject.com/en/5.1/topics/auth/default/
+#https://docs.djangoproject.// problem generating documentationcom/en/5.1/topics/auth/default/
 def staff_login(request):
 # Get username and password from the request body
     username = request.data.get('username')

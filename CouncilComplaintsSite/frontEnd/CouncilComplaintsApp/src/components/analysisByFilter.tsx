@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+//https://recharts.org/en-US/examples/TwoSimplePieChart
 
 const CaseAnalysisForm: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>('');
@@ -92,10 +93,9 @@ const CaseAnalysisForm: React.FC = () => {
         outerRadius={100}
         fill="#8884d8"
         // Dynamically set the label to reflect the selected data choice
-        label={({ status, total }) => {
-            // Dynamically set the label to reflect the selected data choice
-            return `${status}: ${total}`;
-          }}
+        label={({ status, total }: any) => {
+          return status && total ? `${status}: ${total}` : ''; // Avoid undefined labels
+        }}
       />
       <Tooltip />
     </PieChart>
