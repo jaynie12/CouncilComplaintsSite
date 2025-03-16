@@ -31,9 +31,9 @@ class Case(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status =  models.CharField(max_length=500, choices=STATUS, default='Not assigned')
     case_type =  models.CharField(max_length=1000, choices=CASE_TYPE)
-    staff_assigned= models.ForeignKey(User, on_delete=models.CASCADE, related_name='staff_cases_assigned',null=True)
+    staff_assigned= models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     case_image = models.ImageField(upload_to= 'media/case_images/', blank = True, null=True)
     
     def __str__(self):
-        return self.case_short_description
+        return self.issue_description
  

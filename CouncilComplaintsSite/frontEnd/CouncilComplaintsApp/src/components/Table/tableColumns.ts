@@ -60,7 +60,7 @@ export const columns = [
         { value: 'Cancelled', label: 'Cancelled' },
       ],    }
   }),
-    columnHelper.accessor('staff_assigned', {
+    columnHelper.accessor('staff_assigned_display', {
         header: 'Staff Assigned',
         cell: CaseList,
         meta: {

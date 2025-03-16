@@ -6,10 +6,14 @@ from django.contrib.auth.models import User
 
 
 class CaseSerializer(serializers.ModelSerializer):
-    staff_assigned = serializers.StringRelatedField()
+    #staff_assigned = serializers.StringRelatedField()
+    staff_assigned = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)     #staff_assigned = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
+    #staff_assigned = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    staff_assigned_display = serializers.StringRelatedField(source='staff_assigned', read_only=True)
+
     class Meta:
         model = Case
-        fields = ['id', 'case_type', 'status', 'issue_description','impact_description' , 'proposed_action', 'name', 'staff_assigned','email', 'comments']
+        fields = ['id', 'case_type', 'status', 'issue_description','impact_description' , 'proposed_action', 'name', 'staff_assigned','staff_assigned_display','email', 'comments']
 
 class CaseCreateSerializer(serializers.ModelSerializer):
     """
@@ -31,7 +35,7 @@ class CaseCreateSerializer(serializers.ModelSerializer):
         model = Case
         fields = ['id','name' ,'email', 'telephone', 'case_type', 'issue_description', 'impact_description','proposed_action' ,'case_image']
 
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['username', 'password']
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password']

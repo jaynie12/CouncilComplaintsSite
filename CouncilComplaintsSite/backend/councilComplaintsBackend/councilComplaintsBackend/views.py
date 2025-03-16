@@ -64,11 +64,23 @@ def case_details(request, case_id ):
     if request.method == 'GET': 
         case_serializer = CaseSerializer(case) 
         return JsonResponse(case_serializer.data) 
+    
     elif request.method == 'PUT': 
-        case_data = JSONParser().parse(request) 
-        case_serializer = CaseSerializer(case, data=case_data) 
-        user_serializer = UserSerializer(case, data=case_data.get('staff_assigned'))
+        #case_data = JSONParser().parse(request)
+        #user_serializer = UserSerializer(case, data=case_data.get('staff_assigned'))
+        if 'staff_assigned' in request.data:
+            try:
+                # If the staff_assigned field contains a username, fetch the User object
+                user = User.objects.get(username=request.data['staff_assigned'])
+                request.data['staff_assigned'] = user.id  # Update with the User ID
+            except User.DoesNotExist:
+                return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+         
+        #case_serializer = CaseSerializer(case, data=case_data) 
+        case_serializer = CaseSerializer(case, data=request.data)
         if case_serializer.is_valid(): 
+            print(request.data['staff_assigned'])
             case_serializer.save() 
             return JsonResponse(case_serializer.data) 
         return JsonResponse(case_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 

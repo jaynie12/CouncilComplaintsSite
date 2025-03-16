@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 
 const CaseForm = () => {
+  
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [caseType, setCaseType] = useState([]);
 
@@ -63,7 +64,9 @@ const CaseForm = () => {
   };
 
   return (
+    
     <Formik
+    
       initialValues={{
         name: "",
         email: "",
@@ -78,6 +81,7 @@ const CaseForm = () => {
       onSubmit={handleSubmit}
     >
       {({ setFieldValue }) => (
+        
         <Form className="p-4 max-w-lg mx-auto border rounded shadow-lg">
           {/* Name Field */}
           <div className="mb-4">

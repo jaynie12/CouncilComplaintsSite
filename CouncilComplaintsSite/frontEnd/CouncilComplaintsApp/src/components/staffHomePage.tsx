@@ -13,6 +13,7 @@ export function CustomButton({ children, ...attributes }: Props) {
             
   return (
     <div >
+     
     <button
       type="button"
 
@@ -39,12 +40,14 @@ export function CustomButton({ children, ...attributes }: Props) {
 
 
 export default function StaffHomePage() {
+   
     const [raiseCaseClicked, setRaiseCaseClicked] = useState(false);
     const [dataAnalysisClicked, setDataAnalysisClicked] = useState(false);
     const [updateCaseClicked, setUpdateCaseClicked] = useState(false);
 
     return (  
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+          <h2>Staff Home Page</h2>
       <div   style={{ 
         display: "flex", 
         justifyContent: "center", 
